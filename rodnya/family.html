@@ -1,0 +1,724 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Родня — Семейное древо</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f3eadc; font-family: 'Cormorant Garamond', serif; padding: 40px; line-height: 1.6; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 72px; letter-spacing: 2px; margin-bottom: 10px; }
+        header p { font-size: 24px; opacity: 0.8; }
+        .tree-container { max-width: 1200px; margin: 0 auto; background: #fffaf3; padding: 40px; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .tree-title { font-size: 32px; text-align: center; margin-bottom: 40px; font-weight: 600; }
+        
+        .tree, .tree ul { list-style: none; margin-left: 20px; padding-left: 20px; border-left: 2px dashed #d4c5b0; }
+        .tree { margin-left: 0; padding-left: 0; border-left: none; }
+        .tree li { margin: 8px 0; }
+        
+        .node-content { padding: 10px 15px; background: #fefaf5; border-radius: 16px; border-left: 4px solid #d4c5b0; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; flex-wrap: wrap; }
+        .node-content:hover { background: #f5ede2; transform: translateX(5px); }
+        .toggle { font-size: 16px; font-weight: bold; color: #8b7a6b; width: 24px; text-align: center; cursor: pointer; }
+        .person-name { font-weight: 600; font-size: 18px; color: #5a3e2b; }
+        .person-dates { color: #8b7a6b; font-size: 14px; margin-left: 8px; }
+        .person-note { font-size: 13px; color: #a09080; font-style: italic; margin-left: 8px; }
+        .person-photo { width: 45px; height: 45px; border-radius: 50%; background: #e8ddd0; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; overflow: hidden; flex-shrink: 0; margin-right: 5px; }
+        .person-photo:hover { transform: scale(1.05); background: #d4c5b0; }
+        .person-photo img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .children { display: none; margin-left: 35px; padding-left: 20px; border-left: 2px dashed #d4c5b0; }
+        .open > .children { display: block; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #fffaf3; padding: 25px; border-radius: 24px; max-width: 400px; width: 90%; text-align: center; }
+        .modal-content img { max-width: 100%; border-radius: 16px; margin: 15px 0; }
+        .modal-content input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #d4c5b0; border-radius: 12px; font-family: inherit; }
+        .modal-buttons button { padding: 8px 20px; margin: 5px; border: none; border-radius: 40px; background: #e8ddd0; cursor: pointer; }
+        .modal-buttons button:hover { background: #d4c5b0; }
+        
+        .back-link { display: inline-block; margin-top: 40px; font-size: 18px; color: #3b2f2f; text-decoration: none; background: #fffaf3; padding: 12px 24px; border-radius: 40px; transition: 0.3s; }
+        .back-link:hover { background: #e8ddd0; transform: translateX(-5px); }
+        .legend { margin-bottom: 30px; padding: 12px; background: #f5ede2; border-radius: 16px; font-size: 14px; text-align: center; }
+        hr { margin: 30px 0; border: none; height: 1px; background: #e0d5c8; }
+        .section-title { font-size: 22px; font-weight: 600; margin: 30px 0 15px 0; padding: 10px; background: #e8ddd0; border-radius: 12px; text-align: center; }
+    </style>
+</head>
+<body>
+<main>
+<div class="tree-container">
+    <div class="tree-title">Родословное древо семьи Тропиных</div>
+    <div class="legend">[Ф] Нажмите на кнопку фото у ЛЮБОГО человека | Нажмите на имя, чтобы раскрыть потомков</div>
+
+    <!-- ===== ВЕТКА 1: Павел Тропин ===== -->
+    <div class="section-title">Ветка 1: Тропин Павел Александрович</div>
+    
+    <ul class="tree">
+        <li class="tree-node">
+            <div class="node-content" onclick="toggleChildren(event)">
+                <span class="toggle">▶</span>
+                <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Владимир')">[Ф]</span>
+                <span class="person-name">Тропин Владимир</span>
+            </div>
+            <ul class="children">
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Максим Владимирович')">[Ф]</span><span class="person-name">Тропин Максим Владимирович</span></div></li>
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Александр Максимович')">[Ф]</span><span class="person-name">Тропин Александр Максимович</span> + <span class="person-name">Тропина Анна Ефимовна</span></div></li>
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Александр Александрович')">[Ф]</span>
+                        <span class="person-name">Тропин Александр Александрович</span> <span class="person-dates">(1870-1920)</span> + <span class="person-name">Тропина Надежда Ивановна</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Павел Александрович Тропин отец')">[Ф]</span><span class="person-name">Павел Александрович Тропин</span> <span class="person-dates">(1904-1963)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александра Кока')">[Ф]</span><span class="person-name">Александра (Кока)</span> <span class="person-note">(детей нет)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Таисия Коровина')">[Ф]</span><span class="person-name">Таисия (Коровина)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Екатерина Семжана')">[Ф]</span><span class="person-name">Екатерина (Семжана)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Николай Александрович')">[Ф]</span><span class="person-name">Николай</span></div></li>
+                    </ul>
+                </li>
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Павел Александрович Тропин')">[Ф]</span>
+                        <span class="person-name">Тропин Павел Александрович</span> <span class="person-dates">(1904-1963)</span> + <span class="person-name">Тропина Александра Михайловна</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Колыжева Галина Павловна')">[Ф]</span><span class="person-name">Колыжева Галина Павловна</span> <span class="person-dates">(1932-2014)</span></div></li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Антонин Павлович')">[Ф]</span>
+                                <span class="person-name">Тропин Антонин Павлович</span> <span class="person-dates">(1928-2009)</span> + <span class="person-name">Тропина Надежда Михайловна</span>
+                            </div>
+<ul class="tree">
+        <li class="tree-node">
+            <div class="node-content" onclick="toggleChildren(event)">
+                <span class="toggle">▶</span>
+                <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Антонин Павлович')">[Ф]</span>
+                <span class="person-name">Тропин Антонин Павлович</span>
+                <span class="person-dates">(1928-2009)</span>
+            </div>
+            <ul class="children">
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Надежда Михайловна')">[Ф]</span><span class="person-name">Тропина (Пронина) Надежда Михайловна</span> <span class="person-dates">(1927-2008), жена Антонина</span></div></li>
+                
+                <!-- 1. НИКОЛАЙ АНТОНИНОВИЧ -->
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Николай Антонинович')">[Ф]</span>
+                        <span class="person-name">Тропин Николай Антонинович</span>
+                        <span class="person-dates">(1949-2009)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Ангелина Васильевна')">[Ф]</span><span class="person-name">Тропина Ангелина Васильевна, жена Николая</span> <span class="person-dates">(1952 г.р.)</span></div></li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Александр Николаевич')">[Ф]</span>
+                                <span class="person-name">Тропин Александр Николаевич</span>
+                                <span class="person-dates">(1971 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Максим Александрович')">[Ф]</span><span class="person-name">Тропин Максим Александрович</span> <span class="person-dates">(~2003 г.р.)</span></div></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 2. ГАЛИНА КОРОВИНА (первый брак Николая) -->
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Коровина Галина Антониновна')">[Ф]</span>
+                        <span class="person-name">Коровина (Тропина) Галина Антониновна</span>
+                        <span class="person-dates">(1952-1986)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Коровин Николай Александрович')">[Ф]</span><span class="person-name">Коровин Николай Александрович, муж Галины</span> <span class="person-dates">(1954 г.р.)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александр Коровин')">[Ф]</span>Александр <span class="person-note">(умер в детстве)</span></div></li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Мелькова Марина Николаевна')">[Ф]</span>
+                                <span class="person-name">Мелькова Марина Николаевна</span>
+                                <span class="person-dates">(1983 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Мельков Андрей Сергеевич')">[Ф]</span><span class="person-name">Мельков Андрей Сергеевич, муж Марины</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Мелькова Юлиана Андреевна')">[Ф]</span><span class="person-name">Мелькова Юлиана Андреевна</span> <span class="person-dates">(2010 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Мелькова Ольга Андреевна')">[Ф]</span><span class="person-name">Мелькова Ольга Андреевна</span> <span class="person-dates">(2018 г.р.)</span></div></li>
+                            </ul>
+                        </li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Коровин Артём Николаевич')">[Ф]</span>
+                                <span class="person-name">Коровин Артём Николаевич</span>
+                                <span class="person-dates">(1985 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Коровина Светлана')">[Ф]</span><span class="person-name">Коровина Светлана, жена Артема</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Коровина Виктория Артёмовна')">[Ф]</span><span class="person-name">Коровина Виктория Артёмовна</span> <span class="person-dates">(2017 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Коровин Максим Артёмович')">[Ф]</span><span class="person-name">Коровин Максим Артёмович</span> <span class="person-dates">(2022 г.р.)</span></div></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- 3. АЛЕКСАНДР АНТОНИНОВИЧ -->
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Александр Антонинович')">[Ф]</span>
+                        <span class="person-name">Тропин Александр Антонинович</span>
+                        <span class="person-dates">(1956 г.р.)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Нина Клавдиевна')">[Ф]</span><span class="person-name">Тропина (Серова) Нина Клавдиевна, жена Александра</span> <span class="person-dates">(1956 г.р.)</span></div></li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Владимир Александрович')">[Ф]</span>
+                                <span class="person-name">Тропин Владимир Александрович</span>
+                                <span class="person-dates">(1982 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Татьяна')">[Ф]</span><span class="person-name">Тропина Татьяна, жена Владимира</span> <span class="person-dates">(1982 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Кирилл Владимирович')">[Ф]</span><span class="person-name">Тропин Кирилл Владимирович</span> <span class="person-dates">(2003 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Диана Владимировна')">[Ф]</span><span class="person-name">Тропина Диана Владимировна</span> <span class="person-dates">(2013 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Даниил Владимирович')">[Ф]</span><span class="person-name">Тропин Даниил Владимирович</span> <span class="person-dates">(2013 г.р.)</span></div></li>
+                            </ul>
+                        </li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Павлова Галина Александровна')">[Ф]</span><span class="person-name">Павлова (Тропина) Галина Александровна</span> <span class="person-dates">(1986 г.р.)</span> + <span class="person-name">Павлов Юрий Сергеевич, муж Галины</span> <span class="person-dates">(1984 г.р.)</span></div></li>
+                    </ul>
+                </li>
+                
+                <!-- 4. ВЛАДИМИР АНТОНИНОВИЧ -->
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Владимир Антонинович')">[Ф]</span>
+                        <span class="person-name">Тропин Владимир Антонинович</span>
+                        <span class="person-dates">(1956-2023)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Александра Фёдоровна')">[Ф]</span><span class="person-name">Тропина Александра Фёдоровна, жена Владимира</span> <span class="person-dates">(1956 г.р.)</span></div></li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Юрий Владимирович')">[Ф]</span>
+                                <span class="person-name">Тропин Юрий Владимирович</span>
+                                <span class="person-dates">(1978 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Олег Юрьевич')">[Ф]</span><span class="person-name">Тропин Олег Юрьевич</span> <span class="person-dates">(2002 г.р.)</span></div></li>
+                            </ul>
+                        </li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Олег Владимирович')">[Ф]</span><span class="person-name">Тропин Олег Владимирович</span> <span class="person-dates">(1982-1998)</span></div></li>
+                    </ul>
+                </li>
+                
+                <!-- 5. ЛЮДМИЛА ПРОНИНА -->
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Пронина Людмила Антониновна')">[Ф]</span>
+                        <span class="person-name">Пронина (Тропина) Людмила Антониновна</span>
+                        <span class="person-dates">(1959 г.р.)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронин Николай Иванович')">[Ф]</span><span class="person-name">Пронин Николай Иванович, муж Людмилы</span> <span class="person-dates">(1957-2004)</span></div></li>
+                        
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Шадрина Наталья Николаевна')">[Ф]</span>
+                                <span class="person-name">Шадрина Наталья Николаевна</span>
+                                <span class="person-dates">(1981 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Шадрин Алексей')">[Ф]</span><span class="person-name">Шадрин Алексей, муж Натальи</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Шадрина Елизавета Алексеевна')">[Ф]</span><span class="person-name">Шадрина Елизавета Алексеевна</span> <span class="person-dates">(2007 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Шадрина Анастасия Алексеевна')">[Ф]</span><span class="person-name">Шадрина Анастасия Алексеевна</span> <span class="person-dates">(2011 г.р.)</span></div></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Пронин Иван Николаевич')">[Ф]</span>
+                                <span class="person-name">Пронин Иван Николаевич</span>
+                                <span class="person-dates">(1983 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронина Татьяна Александровна')">[Ф]</span><span class="person-name">Пронина (Павлова) Татьяна Александровна, жена Ивана</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронин Андрей Иванович')">[Ф]</span><span class="person-name">Пронин Андрей Иванович</span> <span class="person-dates">(2004 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронин Артём Иванович')">[Ф]</span><span class="person-name">Пронин Артём Иванович</span> <span class="person-dates">(2008 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронин Георгий Иванович')">[Ф]</span><span class="person-name">Пронин Георгий Иванович</span> <span class="person-dates">(2014 г.р.)</span></div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронина Валерия Ивановна')">[Ф]</span><span class="person-name">Пронина Валерия Ивановна</span> <span class="person-dates">(2019 г.р.)</span></div></li>
+                            </ul>
+                        </li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронин Антон Николаевич')">[Ф]</span><span class="person-name">Пронин Антон Николаевич</span> <span class="person-dates">(1988 г.р.)</span></div></li>
+                    </ul>
+                </li>
+                
+                <!-- 6. ЮРИЙ АНТОНИНОВИЧ -->
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Юрий Антонинович')">[Ф]</span>
+                        <span class="person-name">Тропин Юрий Антонинович</span>
+                        <span class="person-dates">(1961 г.р.)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Валентина Вениаминовна')">[Ф]</span><span class="person-name">Тропина (Смирнова) Валентина Вениаминовна, жена Юрия</span> <span class="person-dates">(1959 г.р.)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропин Николай Юрьевич')">[Ф]</span><span class="person-name">Тропин Николай Юрьевич</span> <span class="person-dates">(1984 г.р.)</span></div></li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Серова Ольга Юрьевна')">[Ф]</span>
+                                <span class="person-name">Серова (Тропина) Ольга Юрьевна</span>
+                                <span class="person-dates">(1988 г.р.)</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Серова Есения Александровна')">[Ф]</span><span class="person-name">Серова Есения Александровна</span> <span class="person-dates">(2012 г.р.)</span> <span class="person-note">(создатель сайта)</span></div></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <a href="index.html" class="back-link">← На главную</a>
+</div>
+</main>
+
+<div id="photoModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalPersonName">Имя</h3>
+        <img id="modalPhotoPreview" src="" alt="Фото">
+        <input type="file" id="photoUpload" accept="image/*">
+        <div class="modal-buttons">
+            <button onclick="savePhoto()">Сохранить</button>
+            <button onclick="closeModal()">Отмена</button>
+            <button onclick="deletePhoto()">Удалить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleChildren(event) {
+        const element = event.currentTarget;
+        const parent = element.closest('.tree-node');
+        if (parent) {
+            parent.classList.toggle('open');
+            const toggleSpan = element.querySelector('.toggle');
+            if (toggleSpan) toggleSpan.textContent = parent.classList.contains('open') ? '▼' : '▶';
+        }
+        event.stopPropagation();
+    }
+
+    let currentPhotoPerson = '';
+
+    function editPhoto(event, personName) {
+        event.stopPropagation();
+        currentPhotoPerson = personName;
+        document.getElementById('modalPersonName').textContent = personName;
+        const savedPhoto = localStorage.getItem('photo_' + personName);
+        const preview = document.getElementById('modalPhotoPreview');
+        if (savedPhoto) { preview.src = savedPhoto; preview.style.display = 'block'; }
+        else { preview.src = ''; preview.style.display = 'none'; }
+        document.getElementById('photoModal').classList.add('active');
+    }
+
+    function savePhoto() {
+        const file = document.getElementById('photoUpload').files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('photo_' + currentPhotoPerson, e.target.result);
+                updatePhoto(currentPhotoPerson, e.target.result);
+                closeModal();
+            };
+            reader.readAsDataURL(file);
+        } else { closeModal(); }
+    }
+
+    function deletePhoto() {
+        localStorage.removeItem('photo_' + currentPhotoPerson);
+        updatePhoto(currentPhotoPerson, null);
+        closeModal();
+    }
+
+    function updatePhoto(personName, photoData) {
+        const allPhotos = document.querySelectorAll('.person-photo');
+        for (let el of allPhotos) {
+            const parentDiv = el.closest('.node-content');
+            if (parentDiv && parentDiv.innerText.includes(personName)) {
+                if (photoData) { el.innerHTML = '<img src="' + photoData + '">'; el.classList.remove('empty'); }
+                else { el.innerHTML = '[Ф]'; el.classList.add('empty'); }
+            }
+        }
+    }
+
+    function closeModal() { 
+        document.getElementById('photoModal').classList.remove('active'); 
+        document.getElementById('photoUpload').value = ''; 
+    }
+
+    window.addEventListener('load', () => {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('photo_')) {
+                const name = key.replace('photo_', '');
+                const photo = localStorage.getItem(key);
+                if (photo) updatePhoto(name, photo);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
+                            
+    <hr>
+
+    <!-- ===== ВЕТКА 2: Александра Тропина старшая ===== -->
+    <div class="section-title">Ветка 2: Александра Тропина СТАРШАЯ (Черногубовы)</div>
+    
+    <ul class="tree">
+        <li class="tree-node">
+            <div class="node-content" onclick="toggleChildren(event)">
+                <span class="toggle">▶</span>
+                <span class="person-photo empty" onclick="editPhoto(event, 'Александра Старшая')">[Ф]</span>
+                <span class="person-name">Александра СТАРШАЯ</span> + <span class="person-name">Черногубов Александр Александрович</span>
+            </div>
+            <ul class="children">
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Черногубов Юрий Александрович')">[Ф]</span>
+                        <span class="person-name">Черногубов Юрий Александрович</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александр Черногубов')">[Ф]</span>Александр <span class="person-note">(умер на войне)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Надежда Черногубова')">[Ф]</span>Надежда <span class="person-note">(умерла новорождённой)</span></div></li>
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Гагарина Надежда Юрьевна')">[Ф]</span>
+                                <span class="person-name">Гагарина Надежда Юрьевна</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Светлана Гагарина')">[Ф]</span>Светлана Гагарина</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Елена Гагарина')">[Ф]</span>Елена Гагарина</div></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <!-- ===== ВЕТКА 3: Александра Тропина младшая (предки) ===== -->
+    <div class="section-title">Ветка 3: Александра Тропина МЛАДШАЯ — предки</div>
+    
+    <ul class="tree">
+        <li class="tree-node">
+            <div class="node-content" onclick="toggleChildren(event)">
+                <span class="toggle">▶</span>
+                <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Семён')">[Ф]</span>
+                <span class="person-name">Тропин Семён</span>
+            </div>
+            <ul class="children">
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Тропин Михаил Семёнович')">[Ф]</span>
+                        <span class="person-name">Тропин Михаил Семёнович</span> + <span class="person-name">Мария Михайловна</span> <span class="person-dates">(1862-1946)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Екатерина дочь Михаила')">[Ф]</span>Екатерина</div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александра Старшая ссылка')">[Ф]</span>Александра СТАРШАЯ (смотри Ветку 2)</div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Ольга дочь Михаила')">[Ф]</span>Ольга</div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александра Младшая')">[Ф]</span>Александра МЛАДШАЯ</div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Иван сын Михаила')">[Ф]</span>Иван</div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Николай сын Михаила')">[Ф]</span>Николай</div></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <!-- ===== ВЕТКА 4: Михаил Пронин ===== -->
+    <div class="section-title">Ветка 4: Пронин Михаил Александрович</div>
+    
+    <ul class="tree">
+        <li class="tree-node">
+            <div class="node-content" onclick="toggleChildren(event)">
+                <span class="toggle">▶</span>
+                <span class="person-photo empty" onclick="editPhoto(event, 'Полуэктов Николай')">[Ф]</span>
+                <span class="person-name">Полуэктов Николай</span> + <span class="person-name">Полуэктова Александра</span>
+            </div>
+            <ul class="children">
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Пронина Алевтина Николаевна')">[Ф]</span><span class="person-name">Пронина Алевтина Николаевна</span> + <span class="person-name">Пронин Александр Александрович</span></div></li>
+                
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Пронин Михаил Александрович осн')">[Ф]</span>
+                        <span class="person-name">Пронин Михаил Александрович</span> <span class="person-dates">(1904-1966)</span> + <span class="person-name">Екатерина Мельникова</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тропина Надежда Михайловна')">[Ф]</span>Надежда Михайловна (Тропина)</div></li>
+                        
+                        <!-- Крашенинины -->
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Крашенинина Галина Михайловна')">[Ф]</span>
+                                <span class="person-name">Крашенинина Галина Михайловна</span> <span class="person-dates">(1930-2019)</span> + <span class="person-name">Константин Крашенинин</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Тамара Крюкова')">[Ф]</span>Тамара Крюкова</div>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Татьяна Попова')">[Ф]</span>Татьяна Попова + Алексей → <span class="person-photo empty" onclick="editPhoto(event, 'Евгения Попова')">[Ф]</span>Евгения</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Алексей Крюков')">[Ф]</span>Алексей Крюков + Жанна → <span class="person-photo empty" onclick="editPhoto(event, 'Лита Крюкова')">[Ф]</span>Лита</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Алексей Крашенинин')">[Ф]</span>Алексей Крашенинин</div>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Константин Крашенинин внук')">[Ф]</span>Константин Крашенинин + Татьяна → <span class="person-photo empty" onclick="editPhoto(event, 'Артём Крашенинин')">[Ф]</span>Артём, <span class="person-photo empty" onclick="editPhoto(event, 'Алёна Крашенинина')">[Ф]</span>Алёна</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Наталья Грачёва')">[Ф]</span>Наталья Грачёва → <span class="person-photo empty" onclick="editPhoto(event, 'Анастасия Соболева')">[Ф]</span>Анастасия (+ Владислав → <span class="person-photo empty" onclick="editPhoto(event, 'Валерия Соболева')">[Ф]</span>Валерия), <span class="person-photo empty" onclick="editPhoto(event, 'Александра Грачёва')">[Ф]</span>Александра, <span class="person-photo empty" onclick="editPhoto(event, 'Таисия Сергеева')">[Ф]</span>Таисия</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Марина Бурыгина')">[Ф]</span>Марина Бурыгина + Александр → <span class="person-photo empty" onclick="editPhoto(event, 'Матвей Бурыгин')">[Ф]</span>Матвей, <span class="person-photo empty" onclick="editPhoto(event, 'Роман Бурыгин')">[Ф]</span>Роман, <span class="person-photo empty" onclick="editPhoto(event, 'Яна Бурыгина')">[Ф]</span>Яна</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александр Крашенинин')">[Ф]</span>Александр Крашенинин</div>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Елена Паутова')">[Ф]</span>Елена Паутова + Александр → <span class="person-photo empty" onclick="editPhoto(event, 'Мария Паутова')">[Ф]</span>Мария, <span class="person-photo empty" onclick="editPhoto(event, 'Иван Паутов')">[Ф]</span>Иван</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Сергей Крашенинин')">[Ф]</span>Сергей Крашенинин</div>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Евгений Крашенинин')">[Ф]</span>Евгений Крашенинин + Нина → <span class="person-photo empty" onclick="editPhoto(event, 'Михаил Крашенинин')">[Ф]</span>Михаил (+ Фаина → <span class="person-photo empty" onclick="editPhoto(event, 'Никита Крашенинин')">[Ф]</span>Никита), <span class="person-photo empty" onclick="editPhoto(event, 'Александр Крашенинин младший')">[Ф]</span>Александр (+ Ксения → <span class="person-photo empty" onclick="editPhoto(event, 'Арсений Крашенинин')">[Ф]</span>Арсений, <span class="person-photo empty" onclick="editPhoto(event, 'Дмитрий Крашенинин')">[Ф]</span>Дмитрий)</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Сергей Крашенинин старший')">[Ф]</span>Сергей Крашенинин + Любовь → <span class="person-photo empty" onclick="editPhoto(event, 'Светлана Крашенинина')">[Ф]</span>Светлана (<span class="person-photo empty" onclick="editPhoto(event, 'Игорь Кузовников')">[Ф]</span>Игорь, <span class="person-photo empty" onclick="editPhoto(event, 'Лиза Кузовникова')">[Ф]</span>Лиза), <span class="person-photo empty" onclick="editPhoto(event, 'Елена Шарова')">[Ф]</span>Елена Шарова (+ Сергей → <span class="person-photo empty" onclick="editPhoto(event, 'Назар Шаров')">[Ф]</span>Назар, <span class="person-photo empty" onclick="editPhoto(event, 'Мирон Шаров')">[Ф]</span>Мирон)</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Михаил Крашенинин младший')">[Ф]</span>Михаил Крашенинин + Светлана</div></li>
+                            </ul>
+                        </li>
+                        
+                        <!-- Александр Пронин -->
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Пронин Александр Михайлович второй')">[Ф]</span>
+                                <span class="person-name">Пронин Александр Михайлович</span> + <span class="person-name">Маргарита</span>
+                            </div>
+                            <ul class="children">
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Наталия Мокрова')">[Ф]</span>Наталия Мокрова + Евгений → <span class="person-photo empty" onclick="editPhoto(event, 'Михаил Мокров')">[Ф]</span>Михаил (+ Оксана → <span class="person-photo empty" onclick="editPhoto(event, 'Софья Мокрова')">[Ф]</span>Софья)</div></li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Михаил Пронин умер')">[Ф]</span>Михаил <span class="person-note">(умер)</span></div></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Братья и сёстры Михаила -->
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Екатерина Гузий')">[Ф]</span>Екатерина (Гузий)</div></li>
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Александра Курносова')">[Ф]</span>
+                        <span class="person-name">Александра (Курносова)</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Анатолий Курносов')">[Ф]</span>Анатолий Курносов</div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Любовь Курносова')">[Ф]</span>Любовь Курносова</div></li>
+                    </ul>
+                </li>
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Иван Пронин брат')">[Ф]</span>Иван</div></li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <!-- ===== ВЕТКА 5: Екатерина Мельникова ===== -->
+    <div class="section-title">Ветка 5: Екатерина Павловна Мельникова (Пронина)</div>
+    
+    <ul class="tree">
+        <li class="tree-node">
+            <div class="node-content" onclick="toggleChildren(event)">
+                <span class="toggle">▶</span>
+                <span class="person-photo empty" onclick="editPhoto(event, 'Мельников Павел')">[Ф]</span>
+                <span class="person-name">Мельников Павел</span> + <span class="person-name">Мельникова Апполинария</span>
+            </div>
+            <ul class="children">
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александр Мельников')">[Ф]</span>Александр <span class="person-note">(слепой)</span></div></li>
+                
+                <li class="tree-node">
+                    <div class="node-content" onclick="toggleChildren(event)">
+                        <span class="toggle">▶</span>
+                        <span class="person-photo empty" onclick="editPhoto(event, 'Анна Мельникова')">[Ф]</span>
+                        <span class="person-name">Анна Мельникова</span> + <span class="person-name">Николай</span>
+                    </div>
+                    <ul class="children">
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Сын Анны')">[Ф]</span>Сын <span class="person-note">(не вернулся)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Таисия Николаевна')">[Ф]</span>Таисия <span class="person-dates">(1924)</span></div></li>
+                        <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Михаил Николаевич')">[Ф]</span>Михаил <span class="person-dates">(1927)</span></div></li>
+                        
+                        <!-- Невзорова Александра и её 7 детей -->
+                        <li class="tree-node">
+                            <div class="node-content" onclick="toggleChildren(event)">
+                                <span class="toggle">▶</span>
+                                <span class="person-photo empty" onclick="editPhoto(event, 'Невзорова Александра Николаевна')">[Ф]</span>
+                                <span class="person-name">Невзорова Александра Николаевна</span> + <span class="person-name">Невзоров Александр Петрович</span>
+                            </div>
+                            <ul class="children">
+                                <li class="tree-node"><div class="node-content" onclick="toggleChildren(event)"><span class="toggle">▶</span><span class="person-photo empty" onclick="editPhoto(event, 'Сергей Невзоров')">[Ф]</span>Сергей Невзоров</div>
+                                    <ul class="children"><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Роман Невзоров')">[Ф]</span>Роман + Галина → <span class="person-photo empty" onclick="editPhoto(event, 'Наталия Невзорова')">[Ф]</span>Наталия, <span class="person-photo empty" onclick="editPhoto(event, 'Анастасия Невзорова')">[Ф]</span>Анастасия</div><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Алексей Невзоров')">[Ф]</span>Алексей</div></li></ul>
+                                </li>
+                                <li class="tree-node"><div class="node-content" onclick="toggleChildren(event)"><span class="toggle">▶</span><span class="person-photo empty" onclick="editPhoto(event, 'Леонид Невзоров')">[Ф]</span>Леонид Невзоров + Ирина</div>
+                                    <ul class="children"><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Александр Невзоров')">[Ф]</span>Александр</div><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Ольга Невзорова')">[Ф]</span>Ольга → <span class="person-photo empty" onclick="editPhoto(event, 'Даша')">[Ф]</span>Даша</div></li></ul>
+                                </li>
+                                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Екатерина Невзорова')">[Ф]</span>Екатерина Невзорова</div></li>
+                                <li class="tree-node"><div class="node-content" onclick="toggleChildren(event)"><span class="toggle">▶</span><span class="person-photo empty" onclick="editPhoto(event, 'Юрий Невзоров')">[Ф]</span>Юрий Невзоров</div>
+                                    <ul class="children"><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Артём Невзоров')">[Ф]</span>Артём</div><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Светлана Невзорова')">[Ф]</span>Светлана</div></li></ul>
+                                </li>
+                                <li class="tree-node"><div class="node-content" onclick="toggleChildren(event)"><span class="toggle">▶</span><span class="person-photo empty" onclick="editPhoto(event, 'Михаил Невзоров')">[Ф]</span>Михаил Невзоров</div>
+                                    <ul class="children"><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Сергей Невзоров младший')">[Ф]</span>Сергей</div><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Татьяна Невзорова')">[Ф]</span>Татьяна → <span class="person-photo empty" onclick="editPhoto(event, 'Лера')">[Ф]</span>Лера</div></li></ul>
+                                </li>
+                                <li class="tree-node"><div class="node-content" onclick="toggleChildren(event)"><span class="toggle">▶</span><span class="person-photo empty" onclick="editPhoto(event, 'Александр Невзоров')">[Ф]</span>Александр Невзоров</div>
+                                    <ul class="children"><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Олег Невзоров')">[Ф]</span>Олег</div><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Юля Невзорова')">[Ф]</span>Юля</div></li></ul>
+                                </li>
+                                <li class="tree-node"><div class="node-content" onclick="toggleChildren(event)"><span class="toggle">▶</span><span class="person-photo empty" onclick="editPhoto(event, 'Вера Никуличева')">[Ф]</span>Вера (Никуличева)</div>
+                                    <ul class="children"><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Михаил Никуличев')">[Ф]</span>Михаил + Юлия</div><li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Алёна Никуличева')">[Ф]</span>Алёна</div></li></ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li><div class="node-content"><span class="person-photo empty" onclick="editPhoto(event, 'Екатерина Мельникова Пронина')">[Ф]</span><span class="person-name">Екатерина Павловна Мельникова (Пронина)</span> <span class="person-dates">(1900-1965)</span> <span class="person-note">(наша прабабушка)</span></div></li>
+            </ul>
+        </li>
+    </ul>
+
+    <a href="index.html" class="back-link">← На главную</a>
+</div>
+</main>
+
+<div id="photoModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalPersonName">Имя</h3>
+        <img id="modalPhotoPreview" src="" alt="Фото">
+        <input type="file" id="photoUpload" accept="image/*">
+        <div class="modal-buttons">
+            <button onclick="savePhoto()">Сохранить</button>
+            <button onclick="closeModal()">Отмена</button>
+            <button onclick="deletePhoto()">Удалить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleChildren(event) {
+        const element = event.currentTarget;
+        const parent = element.closest('.tree-node');
+        if (parent) {
+            parent.classList.toggle('open');
+            const toggleSpan = element.querySelector('.toggle');
+            if (toggleSpan) toggleSpan.textContent = parent.classList.contains('open') ? '▼' : '▶';
+        }
+        event.stopPropagation();
+    }
+
+    let currentPhotoPerson = '';
+
+    function editPhoto(event, personName) {
+        event.stopPropagation();
+        currentPhotoPerson = personName;
+        document.getElementById('modalPersonName').textContent = personName;
+        const savedPhoto = localStorage.getItem('photo_' + personName);
+        const preview = document.getElementById('modalPhotoPreview');
+        if (savedPhoto) { preview.src = savedPhoto; preview.style.display = 'block'; }
+        else { preview.src = ''; preview.style.display = 'none'; }
+        document.getElementById('photoModal').classList.add('active');
+    }
+
+    function savePhoto() {
+        const file = document.getElementById('photoUpload').files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('photo_' + currentPhotoPerson, e.target.result);
+                updatePhoto(currentPhotoPerson, e.target.result);
+                closeModal();
+            };
+            reader.readAsDataURL(file);
+        } else { closeModal(); }
+    }
+
+    function deletePhoto() {
+        localStorage.removeItem('photo_' + currentPhotoPerson);
+        updatePhoto(currentPhotoPerson, null);
+        closeModal();
+    }
+
+    function updatePhoto(personName, photoData) {
+        const allPhotos = document.querySelectorAll('.person-photo');
+        for (let el of allPhotos) {
+            const parentDiv = el.closest('.node-content');
+            if (parentDiv && parentDiv.innerText.includes(personName)) {
+                if (photoData) { el.innerHTML = '<img src="' + photoData + '">'; el.classList.remove('empty'); }
+                else { el.innerHTML = '[Ф]'; el.classList.add('empty'); }
+            }
+        }
+    }
+
+    function closeModal() { 
+        document.getElementById('photoModal').classList.remove('active'); 
+        document.getElementById('photoUpload').value = ''; 
+    }
+
+    window.addEventListener('load', () => {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('photo_')) {
+                const name = key.replace('photo_', '');
+                const photo = localStorage.getItem(key);
+                if (photo) updatePhoto(name, photo);
+            }
+        }
+    });
+</script>
+<script>
+    // Функция, которая принудительно обновляет ВСЕ фото при загрузке страницы
+    function fixAllPhotos() {
+        // Проходим по всем localStorage ключам
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('photo_')) {
+                const personId = key.replace('photo_', '');
+                const photoData = localStorage.getItem(key);
+                if (photoData) {
+                    // Ищем все элементы с фото и обновляем их
+                    const allPhotoElements = document.querySelectorAll('.person-photo');
+                    for (let el of allPhotoElements) {
+                        const parentDiv = el.closest('.node-content');
+                        if (parentDiv && parentDiv.innerText.includes(personId)) {
+                            el.innerHTML = '<img src="' + photoData + '">';
+                            el.classList.remove('empty');
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Запускаем при загрузке
+    window.addEventListener('load', function() {
+        fixAllPhotos();
+    });
+    
+    // Также запускаем через небольшую задержку (на всякий случай)
+    setTimeout(fixAllPhotos, 500);
+</script>
+</body>
+</html>
